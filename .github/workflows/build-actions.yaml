@@ -7,28 +7,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v1
+        uses: actions/checkout@master
 
-      - name: Login to Azure
-        uses: Azure/login@v1
+      - name: Setup node version
+        uses: actions/setup-node@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          node-version: "12.16.1"
 
-      - name: Install npm packages
-        shell: bash
+      - name: Install npm packages & Build
         run: |
           cd $GITHUB_WORKSPACE/
-          npm Install
-
-      - name: Build Ionic app
-        shell: bash
-        run: |
-          cd $GITHUB_WORKSPACE/
+          npm install
           npm run build
 
-      - name: Publish app to Azure
-        uses: Azure/cli@v1.0.0
+      - name: Publish app to Azure blob storage
+        uses: bacongobbler/azure-blob-storage-upload@v1.0.0
         with:
-          azcliversion: latest
-          inlineScript: |
-            az storage blob upload-batch -s $GITHUB_WORKSPACE/build -d \$web --acount-name ${{ secrets.STORAGE_ACCOUNT_NAME }}
+          source_dir: build
+          container_name: $web
+          connection_string: ${{ secrets.BLOB_STORAGE_CONNECTION_STRING }}
