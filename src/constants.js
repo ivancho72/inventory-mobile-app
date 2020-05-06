@@ -1,1 +1,2 @@
-export const STRAPI_SERVER_URL = "http://localhost:1337";
+export const STRAPI_SERVER_URL =
+  "https://strapi-inventory-demo.azurewebsites.net";

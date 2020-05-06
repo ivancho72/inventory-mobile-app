@@ -1,0 +1,34 @@
+#Github Actions workflow used to build the ionic app static resources and deploy to Azure blobstorage
+name: Build Static App and Deploy to Azure Blobstorage
+on: [push]
+
+jobs:
+  build_and_publish:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v1
+
+    - name: Login to Azure
+      uses: Azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Install npm packages
+      shell: bash
+      run: | 
+        cd $GITHUB_WORKSPACE/
+        npm Install
+      
+    - name: Build Ionic app
+      shell: bash
+      run: |
+        cd $GITHUB_WORKSPACE/
+        npm run build
+
+    - name: Publish app to Azure
+        uses: Azure/cli@v1.0.0
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az storage blob upload-batch -s $GITHUB_WORKSPACE/build -d \$web --acount-name ${{ secrets.STORAGE_ACCOUNT_NAME }}
