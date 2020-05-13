@@ -1,6 +1,14 @@
 {
   "appId": "io.ionic.starter",
-  "appName": "frontend",
+  "appName": "Polus Marketplace",
   "webDir": "build",
-  "npmClient": "npm"
+  "npmClient": "npm",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 5000,
+      "backgroundColor": "#ffffffff",
+      "splashImmersive": true,
+      "splashFullScreen": true
+    }
+  }
 }
