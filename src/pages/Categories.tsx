@@ -18,7 +18,13 @@ import {
 } from "@ionic/react";
 import Query from "../components/Query";
 import CATEGORIES_QUERY from "../queries/categories";
-import { addOutline, removeOutline, chevronForward } from "ionicons/icons";
+import {
+  addOutline,
+  removeOutline,
+  chevronForward,
+  closeOutline,
+} from "ionicons/icons";
+import "./Categories.css";
 
 export interface Category {
   id: string;
@@ -29,6 +35,7 @@ export interface Category {
 
 interface CategorySelected extends Category {
   selected: boolean;
+  childrenCount: number;
 }
 
 const Categories: React.FC = () => {
@@ -48,7 +55,13 @@ const HeaderItemsForCateogry: React.FC<{ categories: Category[] }> = (
   props
 ) => {
   const catsSelection = props.categories.map((cat) => {
-    return { ...cat, selected: false };
+    return {
+      ...cat,
+      selected: false,
+      childrenCount:
+        props.categories?.filter((f) => f.SubCategoryOf?.Name === cat.Name)
+          .length ?? 0,
+    };
   });
 
   const [categoriesSelected, setCategoriesSelected] = useState<
@@ -109,7 +122,7 @@ const ItemsForCategory: React.FC<itemCategoriesProps> = (props) => {
               >
                 <IonIcon icon={removeOutline} slot="icon-only"></IonIcon>
               </IonButton>
-            ) : (
+            ) : item.childrenCount > 0 ? (
               <IonButton
                 slot="start"
                 color="dark"
@@ -120,6 +133,15 @@ const ItemsForCategory: React.FC<itemCategoriesProps> = (props) => {
                 }}
               >
                 <IonIcon icon={addOutline} slot="icon-only"></IonIcon>
+              </IonButton>
+            ) : (
+              <IonButton
+                slot="start"
+                fill="clear"
+                className="empty-button"
+                disabled={true}
+              >
+                <IonIcon icon={closeOutline} slot="icon-only"></IonIcon>
               </IonButton>
             )}
             <IonButton

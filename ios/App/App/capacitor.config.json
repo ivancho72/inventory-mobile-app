@@ -1,6 +1,6 @@
 {
   "appId": "io.ionic.starter",
-  "appName": "Polus Marketplace",
+  "appName": "Polus",
   "webDir": "build",
   "npmClient": "npm",
   "plugins": {

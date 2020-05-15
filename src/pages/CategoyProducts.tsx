@@ -36,7 +36,7 @@ const CategoryProducts: React.FC = () => {
                   <IonBackButton defaultHref="/categories" />
                 </IonButtons>
                 <IonTitle>
-                  Inventory Markestplace - {productCategory.Name}
+                  Inventory Marketplace - {productCategory.Name}
                 </IonTitle>
               </IonToolbar>
             </IonHeader>

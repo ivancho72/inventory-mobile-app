@@ -8,6 +8,7 @@ import {
   IonItem,
   IonIcon,
   IonLabel,
+  isPlatform,
 } from "@ionic/react";
 import {
   bookmarksOutline,
@@ -19,10 +20,14 @@ import {
   trailSignOutline,
   searchCircleOutline,
   heartHalfOutline,
+  exit,
 } from "ionicons/icons";
 
 import "./Menu.css";
 import { useLocation } from "react-router";
+import { Plugins } from "@capacitor/core";
+
+const mobiApp = Plugins.App;
 
 const routes = {
   appPages: [
@@ -49,11 +54,15 @@ interface Pages {
   icon: string;
   routerDirection?: string;
 }
-export const Menu: React.FC = () => {
+const Menu: React.FC = () => {
   const location = useLocation();
 
-  function renderlistItems(list: Pages[]) {
-    return list
+  const exitApp = () => {
+    mobiApp.exitApp();
+  };
+
+  function renderlistItems(list: Pages[], exitIcon?: boolean) {
+    const menuList = list
       .filter((route) => !!route.path)
       .map((p) => (
         <IonMenuToggle key={p.title} auto-hide="false">
@@ -70,6 +79,19 @@ export const Menu: React.FC = () => {
           </IonItem>
         </IonMenuToggle>
       ));
+
+    if (isPlatform("hybrid") && exitIcon) {
+      menuList.push(
+        <IonMenuToggle key="exit" auto-hide="false">
+          <IonItem detail={false} onClick={exitApp}>
+            <IonIcon slot="start" icon={exit}></IonIcon>
+            <IonLabel>Exit App.</IonLabel>
+          </IonItem>
+        </IonMenuToggle>
+      );
+    }
+
+    return menuList;
   }
 
   return (
@@ -81,9 +103,11 @@ export const Menu: React.FC = () => {
         </IonList>
         <IonList lines="none">
           <IonListHeader>Account</IonListHeader>
-          {renderlistItems(routes.loggedOutPages)}
+          {renderlistItems(routes.loggedOutPages, true)}
         </IonList>
       </IonContent>
     </IonMenu>
   );
 };
+
+export default Menu;
