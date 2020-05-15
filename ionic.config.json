@@ -1,7 +1,8 @@
 {
   "name": "frontend",
-  "type": "react",
   "integrations": {
     "capacitor": {}
-  }
+  },
+  "type": "react",
+  "id": "6a1e6a55"
 }
